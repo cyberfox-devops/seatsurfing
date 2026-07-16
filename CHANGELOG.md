@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.115.1](https://github.com/seatsurfing/seatsurfing/compare/v1.115.0...v1.115.1) (2026-07-16)
+
+
+### 🐛 Bug Fixes
+
+* **deps:** bump golang.org/x/crypto from 0.53.0 to 0.54.0 in /server in the minor-and-patch group ([#2413](https://github.com/seatsurfing/seatsurfing/issues/2413)) ([eca8042](https://github.com/seatsurfing/seatsurfing/commit/eca8042de9a1d3fc477000b89f53895df7630688))
+
 ## [1.115.0](https://github.com/seatsurfing/seatsurfing/compare/v1.114.1...v1.115.0) (2026-07-15)
 
 
