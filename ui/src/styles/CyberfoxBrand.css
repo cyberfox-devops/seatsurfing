@@ -1,0 +1,81 @@
+/* CyberFOX brand overrides — loaded last from _app.tsx so it wins the
+ * cascade over bootstrap.min.css. Brand primary: #16a8e1.
+ * Derived shades: hover/active darkened ~12%/20%, subtle/emphasis per
+ * Bootstrap's tint/shade formula (bg-subtle 80% tint, border-subtle 60%
+ * tint, text-emphasis 60% shade). */
+:root,
+[data-bs-theme="light"] {
+  --bs-primary: #16a8e1;
+  --bs-primary-rgb: 22, 168, 225;
+  --bs-primary-text-emphasis: #09435a;
+  --bs-primary-bg-subtle: #d0eef9;
+  --bs-primary-border-subtle: #a2dcf3;
+  --bs-link-color: #16a8e1;
+  --bs-link-color-rgb: 22, 168, 225;
+  --bs-link-hover-color: #1286b4;
+  --bs-link-hover-color-rgb: 18, 134, 180;
+  --bs-focus-ring-color: rgba(22, 168, 225, 0.25);
+}
+
+[data-bs-theme="dark"] {
+  --bs-primary-text-emphasis: #73cbed;
+  --bs-primary-bg-subtle: #04222d;
+  --bs-primary-border-subtle: #0d6587;
+}
+
+.btn-primary {
+  --bs-btn-bg: #16a8e1;
+  --bs-btn-border-color: #16a8e1;
+  --bs-btn-hover-bg: #1394c6;
+  --bs-btn-hover-border-color: #1286b4;
+  --bs-btn-active-bg: #1286b4;
+  --bs-btn-active-border-color: #107ea9;
+  --bs-btn-disabled-bg: #16a8e1;
+  --bs-btn-disabled-border-color: #16a8e1;
+  --bs-btn-focus-shadow-rgb: 57, 181, 230;
+}
+
+.btn-outline-primary {
+  --bs-btn-color: #16a8e1;
+  --bs-btn-border-color: #16a8e1;
+  --bs-btn-hover-bg: #16a8e1;
+  --bs-btn-hover-border-color: #16a8e1;
+  --bs-btn-active-bg: #16a8e1;
+  --bs-btn-active-border-color: #16a8e1;
+  --bs-btn-disabled-color: #16a8e1;
+  --bs-btn-disabled-border-color: #16a8e1;
+  --bs-btn-focus-shadow-rgb: 22, 168, 225;
+}
+
+.form-check-input:checked,
+.form-check-input[type="checkbox"]:indeterminate {
+  background-color: #16a8e1;
+  border-color: #16a8e1;
+}
+
+.form-control:focus,
+.form-select:focus,
+.form-check-input:focus {
+  border-color: #8bd4f1;
+  box-shadow: 0 0 0 0.25rem rgba(22, 168, 225, 0.25);
+}
+
+.nav-pills .nav-link.active,
+.nav-pills .show > .nav-link {
+  background-color: #16a8e1;
+}
+
+.dropdown-item.active,
+.dropdown-item:active {
+  background-color: #16a8e1;
+}
+
+.page-link.active,
+.active > .page-link {
+  background-color: #16a8e1;
+  border-color: #16a8e1;
+}
+
+.progress-bar {
+  background-color: #16a8e1;
+}
