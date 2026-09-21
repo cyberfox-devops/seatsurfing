@@ -5,3 +5,5 @@ docker-readme-modified.md
 .claude/
 node_modules/
 ui/tsconfig.tsbuildinfo
+
+Dockerfile.acr

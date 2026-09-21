@@ -150,16 +150,33 @@ Useful one-liners for the script file:
 ### Users and roles
 Anyone on `cyberfox.com`, `passwordboss.com`, or `connecton.com` who clicks **Sign in with Microsoft** is auto-created as a **User**. Invite emails are only needed for password logins; SSO users can just sign in.
 
-Roles (DB `users.role`): `0` User · `10` Space Admin · `20` Org Admin · `22` service account (`sync-worker@seatsurfing.local` — leave alone) · `90` Super Admin.
+Roles: since 1.127.9 roles are objects managed under **Settings → Roles** (the migration converted the old numeric roles automatically). `sync-worker@seatsurfing.local` is the M365 sync service account — leave it alone.
 
 - Change a role: **Users → person → Role → Save**.
 - Offboard: **Users → person → Delete**.
 - Add a domain: **Settings → Organization** (a domain must exist before users on it can be created).
-- Emergency promote via SQL: `UPDATE users SET role = 20 WHERE email = 'someone@cyberfox.com';`
+- Emergency promote via SQL: query `roles` for the Org Admin role id first; the old `role = 20` shortcut no longer applies.
 - Break-glass local admin: `admin@seatsurfing.local` (Org Admin, password login at `/ui/login`).
 
 **Symptom guide:** a "Server error" popup on Dashboard with `403` on `/stats/` in DevTools = the signed-in account is not an Org Admin. `500` on `PUT /user/…` when sending an invite = mail relay down (`systemctl status ss-mail-relay`).
 
+
+### Upgrading the backend (last done 2026-09-21: 1.115.0 → 1.127.9, schema 49 → 57)
+Branding lives in one commit on `cyberfox-branding` (logos, favicons, `ui/src/styles/CyberfoxBrand.css`, one line in `_app.tsx`). Upgrade = rebase that commit onto the upstream tag, build in ACR, pull on the VM.
+
+```powershell
+cd C:\Dev\seatsurfing
+git config core.autocrlf false          # once per clone — CRLF breaks the build scripts
+git fetch upstream --tags               # upstream = https://github.com/seatsurfing/seatsurfing.git
+git checkout cyberfox-branding
+git rebase v1.XXX.Y
+git push --force-with-lease origin cyberfox-branding
+# rollback tag of the currently running image
+az acr import --name cyberfoxseatsurfing --source cyberfoxseatsurfing.azurecr.io/seatsurfing-backend:branded --image seatsurfing-backend:<old-version>-cf --force
+# ACR quick build has no BuildKit and a picky scanner — generate a compatible Dockerfile
+(Get-Content Dockerfile -Raw) -replace 'FROM --platform=\S+ ', 'FROM ' -replace '--mount=type=cache,target=\S+\s+', '' -replace 'RUN \./', 'RUN bash ./' -replace '&& \./', '&& bash ./' | Set-Content -Path Dockerfile.acr -NoNewline -Encoding utf8
+az acr build --registry cyberfoxseatsurfing --platform linux/amd64 --build-arg CI_VERSION=1.XXX.Y --image seatsurfing-backend:1.XXX.Y-cf --image seatsurfing-backend:branded --file Dockerfile.acr .
+```
+Before deploying: `pg_dump` to `/home/azureuser/backups/` and `az snapshot create` on the OS disk. Deploy on the VM with `DOCKER_CONFIG=/home/azureuser/.docker docker compose pull server && docker compose up -d server`, then check the startup log for the schema migration and compare user/booking counts. **Rollback after a schema migration is snapshot/dump restore, not an image tag swap.**
 ### Known gaps
-- Backend is 1.115.0; upstream is 1.127.9. Rebuild `branded` from `cyberfox-branding` after rebasing.
 - Booking-reminder emails were silently failing from 2026-07-17 to 2026-09-21 (no SMTP configured).
