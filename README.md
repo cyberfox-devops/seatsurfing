@@ -128,6 +128,7 @@ All in Key Vault `threatiq-kv-prod`; the VM's system-assigned managed identity h
 |---|---|
 | `seatsurfing-crypt-key` | `CRYPT_KEY` in `.env` — encrypts data at rest (SSO client secret). Rotated 2026-09-21 after the original was lost; the SSO client secret was re-entered afterward. |
 | `seatsurfing-db-password` | `DB_PASSWORD` in `.env` — Postgres password for user `seatsurfing` |
+| `seatsurfing-jwt-private-key` / `seatsurfing-jwt-public-key` | PEM files at `/home/azureuser/jwt/` (private key must be PKCS#1 `BEGIN RSA PRIVATE KEY` — this build rejects PKCS#8), mounted read-only at `/keys` via the override file. Set 2026-09-21; sessions now survive restarts. |
 | `seatsurfing-mailer-client-secret` | Mail relay — client secret on the shared `CyberFOX-NoReply-Mailer` app registration (`efb68e07-da8e-4aa5-ad37-7bef1f0da150`), consumer tag `seatsurfing-mailer` |
 
 Entra app registrations: **Seatsurfing SSO** `8eb0814f-af8c-4b4c-babf-342af960a69f` (login, redirect on meet.cyberfox.com); **Seatsurfing M365 Sync Worker** `d004750b-7580-4eac-903c-399c3aeb89f7` (`Calendars.ReadWrite`, `Place.Read.All` — writes bookings to the room mailboxes).
@@ -161,5 +162,4 @@ Roles (DB `users.role`): `0` User · `10` Space Admin · `20` Org Admin · `22` 
 
 ### Known gaps
 - Backend is 1.115.0; upstream is 1.127.9. Rebuild `branded` from `cyberfox-branding` after rebasing.
-- `JWT_PRIVATE_KEY` is not set, so every restart logs all users out. Generate a key pair, store in the vault, add to `.env`.
 - Booking-reminder emails were silently failing from 2026-07-17 to 2026-09-21 (no SMTP configured).
